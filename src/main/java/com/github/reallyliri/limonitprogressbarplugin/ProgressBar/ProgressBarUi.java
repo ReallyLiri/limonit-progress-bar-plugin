@@ -1,5 +1,7 @@
-package com.github.reallyliri.limonitprogressbarplugin;
+package com.github.reallyliri.limonitprogressbarplugin.ProgressBar;
 
+import com.github.reallyliri.limonitprogressbarplugin.Res.Colors;
+import com.github.reallyliri.limonitprogressbarplugin.Res.Icons;
 import com.intellij.openapi.ui.GraphicsConfig;
 import com.intellij.ui.Gray;
 import com.intellij.ui.JBColor;

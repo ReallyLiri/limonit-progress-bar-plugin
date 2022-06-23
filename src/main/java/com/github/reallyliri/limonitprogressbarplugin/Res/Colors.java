@@ -1,4 +1,4 @@
-package com.github.reallyliri.limonitprogressbarplugin;
+package com.github.reallyliri.limonitprogressbarplugin.Res;
 
 import java.awt.*;
 

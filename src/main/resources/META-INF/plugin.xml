@@ -10,7 +10,10 @@
 
     <applicationListeners>
         <listener
-                class="com.github.reallyliri.limonitprogressbarplugin.ProgressBarLafManagerListener"
+                class="com.github.reallyliri.limonitprogressbarplugin.ProgressBar.ProgressBarLafManagerListener"
                 topic="com.intellij.ide.ui.LafManagerListener"/>
+        <listener
+                class="com.github.reallyliri.limonitprogressbarplugin.Tray.ProgressWindowListener"
+                topic="com.intellij.openapi.progress.util.ProgressWindow$Listener"/>
     </applicationListeners>
 </idea-plugin>

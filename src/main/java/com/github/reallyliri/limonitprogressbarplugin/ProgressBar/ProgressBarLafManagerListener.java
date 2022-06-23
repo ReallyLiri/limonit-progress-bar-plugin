@@ -1,4 +1,4 @@
-package com.github.reallyliri.limonitprogressbarplugin;
+package com.github.reallyliri.limonitprogressbarplugin.ProgressBar;
 
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
