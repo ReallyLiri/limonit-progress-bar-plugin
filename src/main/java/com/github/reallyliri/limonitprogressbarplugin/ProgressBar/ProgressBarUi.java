@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProgressBarUi extends BasicProgressBarUI {
     private final AtomicInteger offset = new AtomicInteger(0);
-    private final AtomicInteger offset2 = new AtomicInteger(0);
     private final AtomicInteger velocity = new AtomicInteger(1);
 
     @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
@@ -73,13 +72,12 @@ public class ProgressBarUi extends BasicProgressBarUI {
         final float R2 = JBUIScale.scale(9f);
         final Area containingRoundRect = new Area(new RoundRectangle2D.Float(1f, 1f, width - 2f, height - 2f, R, R));
         graphics.fill(containingRoundRect);
-        offset.set((offset.get() + 1) % getPeriodLength());
-        offset2.set(offset2.get() + velocity.get());
-        if (offset2.get() <= 2) {
-            offset2.set(2);
+        offset.set(offset.get() + velocity.get());
+        if (offset.get() <= 2) {
+            offset.set(2);
             velocity.set(1);
-        } else if (offset2.get() >= width - JBUIScale.scale(15)) {
-            offset2.set(width - JBUIScale.scale(15));
+        } else if (offset.get() >= width - JBUIScale.scale(15)) {
+            offset.set(width - JBUIScale.scale(15));
             velocity.set(-1);
         }
         Area area = new Area(new Rectangle2D.Float(0, 0, width, height));
@@ -92,7 +90,8 @@ public class ProgressBarUi extends BasicProgressBarUI {
             graphics.fill(area);
         }
 
-        Icons.SHELL.paintIcon(progressBar, graphics, offset2.get() - JBUIScale.scale(3), -JBUIScale.scale(-2));
+        Icons.SHELL.paintIcon(progressBar, graphics, offset.get() - JBUIScale.scale(3), -JBUIScale.scale(-2));
+        Icons.SHELL.paintIcon(progressBar, graphics, width - offset.get() - JBUIScale.scale(3), -JBUIScale.scale(-2));
 
         graphics.draw(new RoundRectangle2D.Float(1f, 1f, width - 2f - 1f, height - 2f - 1f, R, R));
         graphics.translate(0, -(component.getHeight() - height) / 2);
@@ -108,10 +107,11 @@ public class ProgressBarUi extends BasicProgressBarUI {
     }
 
     @Override
-    protected void paintDeterminate(@NotNull Graphics graphics, @NotNull JComponent component) {
-        if (!(graphics instanceof Graphics2D)) {
+    protected void paintDeterminate(@NotNull Graphics g, @NotNull JComponent component) {
+        if (!(g instanceof Graphics2D)) {
             return;
         }
+        Graphics2D graphics = (Graphics2D) g;
 
         if (progressBar.getOrientation() != SwingConstants.HORIZONTAL || !component.getComponentOrientation().isLeftToRight()) {
             super.paintDeterminate(graphics, component);
@@ -133,7 +133,6 @@ public class ProgressBarUi extends BasicProgressBarUI {
         Container parent = component.getParent();
         Color background = parent != null ? parent.getBackground() : UIUtil.getPanelBackground();
         graphics.setColor(background);
-        Graphics2D g2 = (Graphics2D) graphics;
         if (component.isOpaque()) {
             graphics.fillRect(0, 0, width, height);
         }
@@ -141,18 +140,18 @@ public class ProgressBarUi extends BasicProgressBarUI {
         final float R = JBUIScale.scale(8f);
         final float R2 = JBUIScale.scale(9f);
         final float off = JBUIScale.scale(1f);
-        g2.translate(0, (component.getHeight() - height) / 2);
-        g2.setColor(progressBar.getForeground());
-        g2.fill(new RoundRectangle2D.Float(0, 0, width - off, height - off, R2, R2));
-        g2.setColor(background);
-        g2.fill(new RoundRectangle2D.Float(off, off, width - 2f * off - off, height - 2f * off - off, R, R));
+        graphics.translate(0, (component.getHeight() - height) / 2);
+        graphics.setColor(progressBar.getForeground());
+        graphics.fill(new RoundRectangle2D.Float(0, 0, width - off, height - off, R2, R2));
+        graphics.setColor(background);
+        graphics.fill(new RoundRectangle2D.Float(off, off, width - 2f * off - off, height - 2f * off - off, R, R));
 
-        g2.setPaint(getRainbowPaintFromHeight(height));
+        graphics.setPaint(getRainbowPaintFromHeight(height));
 
-        g2.fill(new RoundRectangle2D.Float(2f * off, 2f * off, amountFull - JBUIScale.scale(5f), height - JBUIScale.scale(5f), JBUIScale.scale(7f), JBUIScale.scale(7f)));
+        graphics.fill(new RoundRectangle2D.Float(2f * off, 2f * off, amountFull - JBUIScale.scale(5f), height - JBUIScale.scale(5f), JBUIScale.scale(7f), JBUIScale.scale(7f)));
 
-        Icons.MARIO.paintIcon(progressBar, g2, amountFull - JBUIScale.scale(5), -JBUIScale.scale(1));
-        g2.translate(0, -(component.getHeight() - height) / 2);
+        Icons.MARIO.paintIcon(progressBar, graphics, amountFull - JBUIScale.scale(5), -JBUIScale.scale(1));
+        graphics.translate(0, -(component.getHeight() - height) / 2);
 
         if (progressBar.isStringPainted()) {
             paintString(graphics, insets.left, insets.top,
@@ -162,10 +161,10 @@ public class ProgressBarUi extends BasicProgressBarUI {
         config.restore();
     }
 
-    private void paintString(@NotNull Graphics2D graphics, int x, int y, int w, int h, int fillStart, int amountFull) {
+    private void paintString(@NotNull Graphics2D graphics, int x, int y, int width, int height, int fillStart, int amountFull) {
         String progressString = progressBar.getString();
         graphics.setFont(progressBar.getFont());
-        Point renderLocation = getStringPlacement(graphics, progressString, x, y, w, h);
+        Point renderLocation = getStringPlacement(graphics, progressString, x, y, width, height);
         Rectangle oldClip = graphics.getClipBounds();
 
         if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
@@ -173,16 +172,16 @@ public class ProgressBarUi extends BasicProgressBarUI {
             BasicGraphicsUtils.drawString(progressBar, graphics, progressString, renderLocation.x, renderLocation.y);
 
             graphics.setColor(getSelectionForeground());
-            graphics.clipRect(fillStart, y, amountFull, h);
+            graphics.clipRect(fillStart, y, amountFull, height);
             BasicGraphicsUtils.drawString(progressBar, graphics, progressString, renderLocation.x, renderLocation.y);
         } else {
             graphics.setColor(getSelectionBackground());
             AffineTransform rotate = AffineTransform.getRotateInstance(Math.PI / 2);
             graphics.setFont(progressBar.getFont().deriveFont(rotate));
-            renderLocation = getStringPlacement(graphics, progressString, x, y, w, h);
+            renderLocation = getStringPlacement(graphics, progressString, x, y, width, height);
             BasicGraphicsUtils.drawString(progressBar, graphics, progressString, renderLocation.x, renderLocation.y);
             graphics.setColor(getSelectionForeground());
-            graphics.clipRect(x, fillStart, w, amountFull);
+            graphics.clipRect(x, fillStart, width, amountFull);
             BasicGraphicsUtils.drawString(progressBar, graphics, progressString, renderLocation.x, renderLocation.y);
         }
         graphics.setClip(oldClip);
@@ -194,7 +193,7 @@ public class ProgressBarUi extends BasicProgressBarUI {
 
     private LinearGradientPaint getRainbowPaintFromHeight(float scaledHeight) {
 
-        int numRainbowColors = Colors.RAINBOW_ARRAY.length;
+        int numRainbowColors = Colors.COLORS.size();
         float epsilon = 0.000001f;
 
         float[] fractionList = new float[numRainbowColors * 2];
@@ -204,8 +203,8 @@ public class ProgressBarUi extends BasicProgressBarUI {
             fractionList[i * 2] = (float) i / numRainbowColors;
             fractionList[i * 2 + 1] = ((i + 1) - epsilon) / numRainbowColors;
 
-            colorList[i * 2] = Colors.RAINBOW_ARRAY[i];
-            colorList[i * 2 + 1] = Colors.RAINBOW_ARRAY[i];
+            colorList[i * 2] = Colors.COLORS.get(i);
+            colorList[i * 2 + 1] = Colors.COLORS.get(i);
         }
 
         return new LinearGradientPaint(

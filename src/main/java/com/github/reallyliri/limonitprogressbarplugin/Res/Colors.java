@@ -1,14 +1,18 @@
 package com.github.reallyliri.limonitprogressbarplugin.Res;
 
 import java.awt.*;
+import java.util.List;
 
 public class Colors {
-    private static final Color RED = new Color(255, 0, 0);
-    private static final Color ORANGE = new Color(255, 154, 0);
-    private static final Color YELLOW = new Color(255, 255, 0);
-    private static final Color GREEN = new Color(25, 255, 0);
-    private static final Color BLUE = new Color(0, 150, 255);
-    private static final Color VIOLET = new Color(100, 30, 255);
+    private static final Color ORANGE_LIGHT = new Color(218, 154, 88);
+    private static final Color ORANGE_DARK = new Color(179, 99, 29);
+    private static final Color BROWN = new Color(70, 35, 13);
 
-    public static final Color[] RAINBOW_ARRAY = new Color[]{RED, ORANGE, YELLOW, GREEN, BLUE, VIOLET};
+    public static final List<Color> COLORS = List.of(
+            ORANGE_LIGHT,
+            ORANGE_DARK,
+            BROWN,
+            ORANGE_DARK,
+            ORANGE_LIGHT
+    );
 }
