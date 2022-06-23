@@ -6,9 +6,11 @@
 
     <depends>com.intellij.modules.platform</depends>
 
+    <extensions defaultExtensionNs="com.intellij"/>
+
     <applicationListeners>
         <listener
-                class="com.github.reallyliri.limonitprogressbarplugin.ProgressBarSetup"
+                class="com.github.reallyliri.limonitprogressbarplugin.ProgressBarLafManagerListener"
                 topic="com.intellij.ide.ui.LafManagerListener"/>
     </applicationListeners>
 </idea-plugin>
