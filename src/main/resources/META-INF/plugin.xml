@@ -1,18 +1,14 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.reallyliri.limonitprogressbarplugin</id>
-    <name>limonit-progress-bar-plugin</name>
+    <name>Limonit-Progressbar</name>
     <vendor>reallyliri</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.reallyliri.limonitprogressbarplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.reallyliri.limonitprogressbarplugin.services.MyProjectService"/>
-    </extensions>
-
     <applicationListeners>
-        <listener class="com.github.reallyliri.limonitprogressbarplugin.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+        <listener
+                class="com.github.reallyliri.limonitprogressbarplugin.ProgressBarSetup"
+                topic="com.intellij.ide.ui.LafManagerListener"/>
     </applicationListeners>
 </idea-plugin>
