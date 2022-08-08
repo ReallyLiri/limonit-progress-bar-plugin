@@ -3,6 +3,7 @@
     <id>com.github.reallyliri.limonitprogressbarplugin</id>
     <name>Limonit-Progressbar</name>
     <vendor>reallyliri</vendor>
+    <description>Limonit themed progress bar ~~~~~~~~~~~~~~~~~</description>
 
     <depends>com.intellij.modules.platform</depends>
 
