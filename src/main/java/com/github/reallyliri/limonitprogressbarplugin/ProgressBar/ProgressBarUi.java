@@ -20,11 +20,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProgressBarUi extends BasicProgressBarUI {
     private final AtomicInteger offset = new AtomicInteger(0);
     private final AtomicInteger velocity = new AtomicInteger(1);
+
+    private static final ImageIcon determinateIcon = getDeterminateIcon();
 
     @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
     public static ComponentUI createUI(JComponent component) {
@@ -55,6 +59,9 @@ public class ProgressBarUi extends BasicProgressBarUI {
         if (barRectWidth <= 0 || barRectHeight <= 0) {
             return;
         }
+
+        final int handIconWidth = 70;
+
         graphics.setColor(new JBColor(Gray._240.withAlpha(50), Gray._128.withAlpha(50)));
         int width = component.getWidth();
         int height = component.getPreferredSize().height;
@@ -73,11 +80,13 @@ public class ProgressBarUi extends BasicProgressBarUI {
         final Area containingRoundRect = new Area(new RoundRectangle2D.Float(1f, 1f, width - 2f, height - 2f, R, R));
         graphics.fill(containingRoundRect);
         offset.set(offset.get() + velocity.get());
-        if (offset.get() <= 2) {
-            offset.set(2);
+        final int lowerBound = 2;
+        final int upperBound = width - handIconWidth - 12;
+        if (offset.get() <= lowerBound) {
+            offset.set(lowerBound);
             velocity.set(1);
-        } else if (offset.get() >= width - JBUIScale.scale(15)) {
-            offset.set(width - JBUIScale.scale(15));
+        } else if (offset.get() >= upperBound) {
+            offset.set(upperBound);
             velocity.set(-1);
         }
         Area area = new Area(new Rectangle2D.Float(0, 0, width, height));
@@ -90,8 +99,8 @@ public class ProgressBarUi extends BasicProgressBarUI {
             graphics.fill(area);
         }
 
-        Icons.SHELL.paintIcon(progressBar, graphics, offset.get() - JBUIScale.scale(3), -JBUIScale.scale(-2));
-        Icons.SHELL.paintIcon(progressBar, graphics, width - offset.get() - JBUIScale.scale(3), -JBUIScale.scale(-2));
+        Icons.HAND.paintIcon(progressBar, graphics, width - handIconWidth, 0);
+        Icons.CAN.paintIcon(progressBar, graphics, offset.get(), 0);
 
         graphics.draw(new RoundRectangle2D.Float(1f, 1f, width - 2f - 1f, height - 2f - 1f, R, R));
         graphics.translate(0, -(component.getHeight() - height) / 2);
@@ -150,7 +159,7 @@ public class ProgressBarUi extends BasicProgressBarUI {
 
         graphics.fill(new RoundRectangle2D.Float(2f * off, 2f * off, amountFull - JBUIScale.scale(5f), height - JBUIScale.scale(5f), JBUIScale.scale(7f), JBUIScale.scale(7f)));
 
-        Icons.MARIO.paintIcon(progressBar, graphics, amountFull - JBUIScale.scale(5), -JBUIScale.scale(1));
+        determinateIcon.paintIcon(progressBar, graphics, amountFull - JBUIScale.scale(5), -JBUIScale.scale(1));
         graphics.translate(0, -(component.getHeight() - height) / 2);
 
         if (progressBar.isStringPainted()) {
@@ -159,6 +168,20 @@ public class ProgressBarUi extends BasicProgressBarUI {
                     amountFull, insets);
         }
         config.restore();
+    }
+
+    @NotNull
+    private static ImageIcon getDeterminateIcon() {
+        final Set<ImageIcon> icons = Set.of(
+                Icons.DETERMINATE_BAR_1,
+                Icons.DETERMINATE_BAR_2,
+                Icons.DETERMINATE_BAR_3,
+                Icons.DETERMINATE_BAR_4
+        );
+        return icons.stream()
+                .skip(new Random().nextInt(icons.size()))
+                .findFirst()
+                .orElseThrow();
     }
 
     private void paintString(@NotNull Graphics2D graphics, int x, int y, int width, int height, int fillStart, int amountFull) {

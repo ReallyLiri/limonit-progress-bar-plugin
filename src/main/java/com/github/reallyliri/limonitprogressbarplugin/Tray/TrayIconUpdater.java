@@ -13,8 +13,9 @@ public class TrayIconUpdater implements Disposable {
     private static final String applicationName = ApplicationInfo.getInstance().getFullApplicationName();
     private static final long ANIMATION_DELAY_MS = 1000L;
     private static final java.util.List<Image> IMAGES = java.util.List.of(
-            Icons.MARIO.getImage(),
-            Icons.SHELL.getImage()
+            Icons.TRAY_1.getImage(),
+            Icons.TRAY_2.getImage(),
+            Icons.TRAY_3.getImage()
     );
 
     private final AtomicBoolean showing = new AtomicBoolean(false);
