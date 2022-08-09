@@ -27,8 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ProgressBarUi extends BasicProgressBarUI {
     private final AtomicInteger offset = new AtomicInteger(0);
     private final AtomicInteger velocity = new AtomicInteger(1);
-
-    private static final ImageIcon determinateIcon = getDeterminateIcon();
+    private final ImageIcon determinateIcon = getDeterminateIcon();
 
     @SuppressWarnings({"MethodOverridesStaticMethodOfSuperclass", "UnusedDeclaration"})
     public static ComponentUI createUI(JComponent component) {
@@ -159,7 +158,7 @@ public class ProgressBarUi extends BasicProgressBarUI {
 
         graphics.fill(new RoundRectangle2D.Float(2f * off, 2f * off, amountFull - JBUIScale.scale(5f), height - JBUIScale.scale(5f), JBUIScale.scale(7f), JBUIScale.scale(7f)));
 
-        determinateIcon.paintIcon(progressBar, graphics, amountFull - JBUIScale.scale(5), -JBUIScale.scale(1));
+        determinateIcon.paintIcon(progressBar, graphics, amountFull - JBUIScale.scale(15), -JBUIScale.scale(1));
         graphics.translate(0, -(component.getHeight() - height) / 2);
 
         if (progressBar.isStringPainted()) {
