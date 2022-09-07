@@ -3,7 +3,7 @@
     <id>com.github.reallyliri.limonitprogressbarplugin</id>
     <name>Limonit-Progressbar</name>
     <vendor>reallyliri</vendor>
-    <description>Limonit themed progress bar ~~~~~~~~~~~~~~~~~</description>
+    <description>Custom progress bar and tray icon featuring the beautiful ginger cat Limonit</description>
 
     <depends>com.intellij.modules.platform</depends>
 
