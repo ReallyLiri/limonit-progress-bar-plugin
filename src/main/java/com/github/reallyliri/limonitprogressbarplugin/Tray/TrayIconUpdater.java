@@ -3,6 +3,7 @@ package com.github.reallyliri.limonitprogressbarplugin.Tray;
 import com.github.reallyliri.limonitprogressbarplugin.Res.Icons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.util.LazyInitializer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ public class TrayIconUpdater implements Disposable {
     );
 
     private final AtomicBoolean showing = new AtomicBoolean(false);
-    private final TrayIcon trayIcon = new TrayIcon(IMAGES.get(0), String.format("%s is working hard! (or hardly working?)", applicationName));
+    private final LazyInitializer.LazyValue<TrayIcon> trayIconLazy = LazyInitializer.create(() -> new TrayIcon(IMAGES.get(0), String.format("%s is working hard! (or hardly working?)", applicationName)));
 
     public void show() {
         if (!systemTraySupported || !showing.compareAndSet(false, true)) {
@@ -27,6 +28,7 @@ public class TrayIconUpdater implements Disposable {
         }
         SwingUtilities.invokeLater(() -> {
             try {
+                TrayIcon trayIcon = trayIconLazy.get();
                 SystemTray.getSystemTray().add(trayIcon);
                 new Thread(() -> {
                     int index = 0;
@@ -50,7 +52,7 @@ public class TrayIconUpdater implements Disposable {
         if (!systemTraySupported || !showing.compareAndSet(true, false)) {
             return;
         }
-        SwingUtilities.invokeLater(() -> SystemTray.getSystemTray().remove(trayIcon));
+        SwingUtilities.invokeLater(() -> SystemTray.getSystemTray().remove(trayIconLazy.get()));
     }
 
     @Override
