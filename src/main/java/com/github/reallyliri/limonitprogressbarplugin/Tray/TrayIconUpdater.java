@@ -3,6 +3,7 @@ package com.github.reallyliri.limonitprogressbarplugin.Tray;
 import com.github.reallyliri.limonitprogressbarplugin.Res.Icons;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.LazyInitializer;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TrayIconUpdater implements Disposable {
+    private static final Logger log = Logger.getInstance(TrayIconUpdater.class);
     private static final boolean systemTraySupported = SystemTray.isSupported();
     private static final String applicationName = ApplicationInfo.getInstance().getFullApplicationName();
     private static final long ANIMATION_DELAY_MS = 1000L;
@@ -42,8 +44,8 @@ public class TrayIconUpdater implements Disposable {
                         }
                     }
                 }).start();
-            } catch (AWTException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                log.error("failed to create tray", e);
             }
         });
     }
