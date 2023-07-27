@@ -2,10 +2,9 @@
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
-    // Java support
     id("java")
-    // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.13.1"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.gradleIntelliJPlugin)
 }
 
 group = properties("pluginGroup")
