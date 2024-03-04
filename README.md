@@ -6,7 +6,7 @@ Install from plugin store: https://plugins.jetbrains.com/plugin/19654-limonit-pr
 
 Determinate and indeterminate progress bars:
 
-![gif](https://i.imgur.com/b5PSwgk.gif)
+![gif](https://i.imgur.com/Dm20hS1.gif)
 
 Tray icon:
 
