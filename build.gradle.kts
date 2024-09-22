@@ -25,6 +25,10 @@ intellij {
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 tasks {
     // Set the JVM compatibility versions
     properties("javaVersion").let {
@@ -46,6 +50,7 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken"))
-        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+        channels.set(listOf(properties("pluginVersion")))
     }
 }
+
