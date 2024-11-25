@@ -50,7 +50,6 @@ tasks {
 
     publishPlugin {
         token.set(System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken"))
-        channels.set(listOf(properties("pluginVersion")))
+        channels.set(setOf("stable"))
     }
 }
-
