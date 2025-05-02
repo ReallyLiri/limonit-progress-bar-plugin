@@ -38,6 +38,10 @@ tasks {
         }
     }
 
+    withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask> {
+        enabled = false
+    }
+
     wrapper {
         gradleVersion = properties("gradleVersion")
     }
