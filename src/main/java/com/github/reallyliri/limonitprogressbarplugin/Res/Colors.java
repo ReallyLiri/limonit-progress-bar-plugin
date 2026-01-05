@@ -7,9 +7,9 @@ import java.awt.*;
 import java.util.List;
 
 public class Colors {
-    private static final Color ORANGE_LIGHT = toJBColor(new Color(218, 154, 88));
-    private static final Color ORANGE_DARK = toJBColor(new Color(179, 99, 29));
-    private static final Color BROWN = toJBColor(new Color(70, 35, 13));
+    private static final Color ORANGE_LIGHT = new JBColor("ORANGE_LIGHT", new Color(218, 154, 88));
+    private static final Color ORANGE_DARK = new JBColor("ORANGE_DARK", new Color(179, 99, 29));
+    private static final Color BROWN = new JBColor("BROWN", new Color(70, 35, 13));
 
     @NotNull
     private static JBColor toJBColor(@NotNull Color color) {

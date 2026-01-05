@@ -1,36 +1,58 @@
 
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
     id("java")
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.gradleIntelliJPlugin)
+    alias(libs.plugins.intellijPlatform)
 }
 
 group = properties("pluginGroup")
 version = properties("pluginVersion")
 
-// Configure project's dependencies
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+        jetbrainsRuntime()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
-intellij {
-    pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    type.set(properties("platformType"))
+dependencies {
+    intellijPlatform {
+        intellijIdeaCommunity(properties("platformVersion"))
 
-    // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
+        pluginVerifier()
+        zipSigner()
+        testFramework(TestFrameworkType.Platform)
+    }
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        name = properties("pluginName")
+        version = properties("pluginVersion")
+
+        ideaVersion {
+            sinceBuild = properties("pluginSinceBuild")
+            untilBuild = properties("pluginUntilBuild")
+        }
+    }
+
+    publishing {
+        token = System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken")
+        channels = listOf("stable")
+    }
 }
 
 tasks {
-    // Set the JVM compatibility versions
     properties("javaVersion").let {
         withType<JavaCompile> {
             sourceCompatibility = it
@@ -38,22 +60,7 @@ tasks {
         }
     }
 
-    withType<org.jetbrains.intellij.tasks.BuildSearchableOptionsTask> {
-        enabled = false
-    }
-
     wrapper {
         gradleVersion = properties("gradleVersion")
-    }
-
-    patchPluginXml {
-        version.set(properties("pluginVersion"))
-        sinceBuild.set(properties("pluginSinceBuild"))
-        untilBuild.set(properties("pluginUntilBuild"))
-    }
-
-    publishPlugin {
-        token.set(System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken"))
-        channels.set(setOf("stable"))
     }
 }
