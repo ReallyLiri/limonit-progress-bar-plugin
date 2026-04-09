@@ -14,10 +14,20 @@ Tray icon:
 
 ### Build and Publish
 
-Make sure you have jdk-17 properly configured.
+Project toolchain
+
+The project requests JDK 25. Gradle can automatically download a matching JDK via the Foojay resolver plugin included in
+this branch. If you prefer to install a JDK yourself, on macOS you can:
+
+Build and publish
 
 ```shell
-./gradlew build
+./gradlew clean build
+# run tests
+./gradlew test
+# run the IntelliJ Plugin Verifier (requires network)
+./gradlew runPluginVerifier
+
 export ORG_GRADLE_PROJECT_intellijPublishToken="..."
 ./gradlew publishPlugin
 ```
