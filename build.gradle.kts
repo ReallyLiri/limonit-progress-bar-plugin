@@ -1,5 +1,6 @@
-
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+
+val jdkVersion = 25
 
 fun properties(key: String) = project.findProperty(key).toString()
 
@@ -23,7 +24,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity(properties("platformVersion"))
+        intellijIdea(properties("platformVersion"))
 
         pluginVerifier()
         zipSigner()
@@ -32,7 +33,13 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(jdkVersion)
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(jdkVersion))
+    }
 }
 
 intellijPlatform {
@@ -49,6 +56,12 @@ intellijPlatform {
     publishing {
         token = System.getenv("ORG_GRADLE_PROJECT_intellijPublishToken")
         channels = listOf("stable")
+    }
+
+    pluginVerification {
+        ides {
+            recommended()
+        }
     }
 }
 

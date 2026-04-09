@@ -1,7 +1,9 @@
 [versions]
-kotlin = "2.2.21"
-intellijPlatform = "2.10.5"
+kotlin = "2.3.20"
+intellijPlatform = "2.13.1"
+foojay = "0.6.0"
 
 [plugins]
 intellijPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intellijPlatform" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version.ref = "foojay" }
