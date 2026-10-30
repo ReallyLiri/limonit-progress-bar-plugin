@@ -4,7 +4,6 @@ import com.intellij.openapi.Disposable;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressWindow;
-import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ public class ProgressWindowListener implements ProgressWindow.Listener, Disposab
                     progressWindows = progressWindows.stream()
                             .filter(AbstractProgressIndicatorBase::isRunning)
                             .collect(Collectors.toList());
-                    inProgress = CollectionUtils.isNotEmpty(progressWindows);
+                    inProgress = !progressWindows.isEmpty();
                 }
                 if (inProgress != wasInProgress) {
                     onProgressChange();
